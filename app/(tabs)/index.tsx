@@ -1,74 +1,174 @@
-import { Image, StyleSheet, Platform } from 'react-native';
+import React, { useState } from "react";
+import {
+  Text,
+  View,
+  TouchableOpacity,
+  StyleSheet,
+  FlatList,
+} from "react-native";
 
-import { HelloWave } from '@/components/HelloWave';
-import ParallaxScrollView from '@/components/ParallaxScrollView';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
+// Contoh data tugas
+const runningTasks = [
+  {
+    id: "1",
+    customer: "The Com",
+    description: "Pengiriman | Senin 30 Oktober 2024",
+  },
+  {
+    id: "2",
+    customer: "Rief Bajigur.Net",
+    description: "Kanvassing | Senin 30 Oktober 2024",
+  },
+  {
+    id: "3",
+    customer: "Toko Sinar Elektronik",
+    description: "Pengiriman | Senin 30 Oktober 2024",
+  },
+];
 
-export default function HomeScreen() {
+const completedTasks = [
+  {
+    id: "4",
+    customer: "Toko Abdi Jaya",
+    description: "Kanvassing | Senin 30 Oktober 2024",
+  },
+  {
+    id: "5",
+    customer: "Toko Perangkat Jaringan",
+    description: "Pengiriman | Senin 30 Oktober 2024",
+  },
+];
+
+export default function Index() {
+  const [activeTab, setActiveTab] = useState("running");
+
+  // Render item untuk FlatList
+  const renderItem = ({
+    item,
+  }: {
+    item: { id: string; customer: string; description: string };
+  }) => (
+    <TouchableOpacity style={styles.taskItem}>
+      <Text style={styles.taskTitle}>{item.customer}</Text>
+      <Text style={styles.taskDescription}>{item.description}</Text>
+    </TouchableOpacity>
+  );
+
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({
-              ios: 'cmd + d',
-              android: 'cmd + m',
-              web: 'F12'
-            })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-        <ThemedText>
-          Tap the Explore tab to learn more about what's included in this starter app.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          When you're ready, run{' '}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
+    <View style={styles.container}>
+      {/* Header Tabs */}
+      <View style={styles.tabContainer}>
+        <TouchableOpacity
+          style={[styles.tab, activeTab === "running" && styles.activeTab]}
+          onPress={() => setActiveTab("running")}
+        >
+          <Text
+            style={[
+              styles.tabText,
+              activeTab === "running" && styles.activeTabText,
+            ]}
+          >
+            Berjalan
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[styles.tab, activeTab === "completed" && styles.activeTab]}
+          onPress={() => setActiveTab("completed")}
+        >
+          <Text
+            style={[
+              styles.tabText,
+              activeTab === "completed" && styles.activeTabText,
+            ]}
+          >
+            Selesai
+          </Text>
+        </TouchableOpacity>
+      </View>
+
+      {/* Task List Content */}
+      <View style={styles.content}>
+        {activeTab === "running" ? (
+          <FlatList
+            data={runningTasks}
+            renderItem={renderItem}
+            keyExtractor={(item) => item.id}
+            contentContainerStyle={styles.listContainer}
+            ListEmptyComponent={
+              <Text style={styles.emptyText}>Tidak ada tugas berjalan</Text>
+            }
+          />
+        ) : (
+          <FlatList
+            data={completedTasks}
+            renderItem={renderItem}
+            keyExtractor={(item) => item.id}
+            contentContainerStyle={styles.listContainer}
+            ListEmptyComponent={
+              <Text style={styles.emptyText}>Tidak ada tugas selesai</Text>
+            }
+          />
+        )}
+      </View>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
+  container: {
+    flex: 1,
+    backgroundColor: "#f5f5f5",
   },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
+  tabContainer: {
+    flexDirection: "row",
+    borderBottomWidth: 1,
+    borderBottomColor: "#e0e0e0",
+    backgroundColor: "#ffffff",
   },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
+  tab: {
+    flex: 1,
+    paddingVertical: 15,
+    alignItems: "center",
+  },
+  activeTab: {
+    borderBottomWidth: 2,
+    borderBottomColor: "#007aff",
+  },
+  tabText: {
+    fontSize: 16,
+    color: "#7f8c8d",
+  },
+  activeTabText: {
+    color: "#007aff",
+    fontWeight: "600",
+  },
+  content: {
+    flex: 1,
+  },
+  listContainer: {
+    padding: 15,
+  },
+  taskItem: {
+    backgroundColor: "#ffffff",
+    padding: 16,
+    borderRadius: 8,
+    marginBottom: 12,
+    elevation: 2,
+    shadowColor: "#000",
+  },
+  taskTitle: {
+    fontSize: 16,
+    fontWeight: "600",
+    marginBottom: 6,
+  },
+  taskDescription: {
+    fontSize: 14,
+    color: "#7f8c8d",
+  },
+  emptyText: {
+    textAlign: "center",
+    marginTop: 40,
+    fontSize: 16,
+    color: "#7f8c8d",
   },
 });
