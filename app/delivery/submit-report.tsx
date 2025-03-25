@@ -1,4 +1,5 @@
 import TextField from "@/components/TextField";
+import { AvailableProduct, Product } from "@/types";
 import { useState } from "react";
 import {
   StyleSheet,
@@ -6,21 +7,69 @@ import {
   Text,
   TouchableOpacity,
   ScrollView,
-  TextInput,
-  Platform,
 } from "react-native";
+import ProductSection from "./products";
+import { Ionicons } from "@expo/vector-icons";
+import ProductSelectionModal from "./products-modal";
 
 export default function SubmitReport() {
-  const statusOptions = ["Berhasil", "Dalam Proses", "Gagal"];
+  const [products, setProducts] = useState<Product[]>([
+    { id: "1", name: "Router A", quantity: 100 },
+    { id: "2", name: "Router B", quantity: 150 },
+    { id: "3", name: "Router C", quantity: 1 },
+  ]);
+
+  const [modalVisible, setModalVisible] = useState<boolean>(false);
+
+  const availableProducts: AvailableProduct[] = [
+    { id: "1", name: "Router A" },
+    { id: "2", name: "Router B" },
+    { id: "3", name: "Router C" },
+    { id: "4", name: "Splicer" },
+    { id: "5", name: "LAN Cable" },
+  ];
+
+  const handleSelectProduct = (product: AvailableProduct): void => {
+    const existingProduct = products.find((p) => p.id === product.id);
+
+    if (existingProduct) {
+      // Jika produk sudah ada, tambahkan quantity-nya
+      setProducts(
+        products.map((p) =>
+          p.id === product.id ? { ...p, quantity: p.quantity + 1 } : p
+        )
+      );
+    } else {
+      // Jika produk belum ada, tambahkan dengan quantity 1
+      setProducts([...products, { ...product, quantity: 1 }]);
+    }
+
+    setModalVisible(false);
+  };
 
   return (
     <View style={styles.container}>
       <ScrollView style={styles.content}>
+        {/* Recipient */}
         <View style={styles.formContainer}>
-          {/* Recipient */}
           <TextField label="Penerima" />
         </View>
+
+        {/* Product Section - Gunakan komponen dengan controlled state */}
+        <ProductSection
+          title="Produk"
+          products={products} // Gunakan products, bukan initialProducts
+          onProductsChange={setProducts} // Callback untuk update products
+        />
       </ScrollView>
+
+      {/* Floating Action Button */}
+      <TouchableOpacity
+        style={styles.fab}
+        onPress={() => setModalVisible(true)}
+      >
+        <Ionicons name="add" size={24} color="white" />
+      </TouchableOpacity>
 
       {/* Continue Button */}
       <View style={styles.footer}>
@@ -28,6 +77,15 @@ export default function SubmitReport() {
           <Text style={styles.submitButtonText}>Selesai</Text>
         </TouchableOpacity>
       </View>
+
+      {/* Product Selection Modal */}
+      <ProductSelectionModal
+        visible={modalVisible}
+        title="Item Produk"
+        products={availableProducts}
+        onClose={() => setModalVisible(false)}
+        onSelectProduct={handleSelectProduct}
+      />
     </View>
   );
 }
@@ -42,25 +100,7 @@ const styles = StyleSheet.create({
   },
   formContainer: {
     padding: 20,
-  },
-  fieldContainer: {
-    marginBottom: 16,
-  },
-  fieldLabel: {
-    fontSize: 14,
-    color: "#666",
-    marginBottom: 8,
-  },
-  fieldValue: {
-    fontSize: 16,
-    color: "#333",
-    paddingVertical: 4,
-    flex: 1,
-  },
-  separator: {
-    height: 1,
-    backgroundColor: "#E0E0E0",
-    marginTop: 8,
+    paddingBottom: 0,
   },
   footer: {
     backgroundColor: "white",
@@ -79,5 +119,21 @@ const styles = StyleSheet.create({
     color: "white",
     fontSize: 16,
     fontWeight: "500",
+  },
+  fab: {
+    position: "absolute",
+    right: 20,
+    bottom: 90,
+    width: 56,
+    height: 56,
+    borderRadius: 28,
+    backgroundColor: "#4285F4",
+    justifyContent: "center",
+    alignItems: "center",
+    elevation: 5,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
   },
 });

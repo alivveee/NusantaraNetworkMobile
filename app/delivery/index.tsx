@@ -1,16 +1,14 @@
+import PickerField from "@/components/PickerField";
+import TextField from "@/components/TextField";
+import { useRouter } from "expo-router";
 import { useState } from "react";
 import {
+  ScrollView,
   StyleSheet,
-  View,
   Text,
   TouchableOpacity,
-  ScrollView,
-  Platform,
+  View,
 } from "react-native";
-import { Picker } from "@react-native-picker/picker";
-import { useRouter } from "expo-router";
-import TextField from "@/components/TextField";
-import PickerField from "@/components/PickerField";
 
 export default function Index() {
   const router = useRouter();
