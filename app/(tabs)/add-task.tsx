@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
 } from "react-native";
 import React from "react";
-import { useRouter } from "expo-router";
+import { RelativePathString, useRouter } from "expo-router";
 
 const typeOptions = [
   {
@@ -27,7 +27,7 @@ export default function AddTask() {
     <TouchableOpacity
       style={styles.typeItem}
       onPress={() => {
-        router.push("/delivery");
+        router.push(`/${item.value}` as RelativePathString);
       }}
     >
       <Text style={styles.optionText}>{item.label}</Text>

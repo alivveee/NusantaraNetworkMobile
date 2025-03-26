@@ -8,9 +8,9 @@ import {
   TouchableOpacity,
   ScrollView,
 } from "react-native";
-import ProductSection from "./products";
+import ProductSection from "../../components/products";
 import { Ionicons } from "@expo/vector-icons";
-import ProductSelectionModal from "./products-modal";
+import ProductSelectionModal from "../../components/products-modal";
 
 export default function SubmitReport() {
   const [products, setProducts] = useState<Product[]>([

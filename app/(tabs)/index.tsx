@@ -1,3 +1,4 @@
+import { RelativePathString, useRouter } from "expo-router";
 import React, { useState } from "react";
 import {
   Text,
@@ -7,50 +8,82 @@ import {
   FlatList,
 } from "react-native";
 
-// Contoh data tugas
 const runningTasks = [
   {
     id: "1",
     customer: "The Com",
-    description: "Pengiriman | Senin 30 Oktober 2024",
+    type: "pengiriman",
+    date: "Senin 30 Oktober 2024",
   },
   {
     id: "2",
     customer: "Rief Bajigur.Net",
-    description: "Kanvassing | Senin 30 Oktober 2024",
+    type: "kanvassing",
+    date: "Senin 30 Oktober 2024",
   },
   {
     id: "3",
     customer: "Toko Sinar Elektronik",
-    description: "Pengiriman | Senin 30 Oktober 2024",
+    type: "pengiriman",
+    date: "Senin 30 Oktober 2024",
+  },
+  {
+    id: "4",
+    customer: "Laporan Selesai",
+    type: "laporan selesai",
+    date: "Senin 30 Oktober 2024",
   },
 ];
 
 const completedTasks = [
   {
-    id: "4",
+    id: "5",
     customer: "Toko Abdi Jaya",
-    description: "Kanvassing | Senin 30 Oktober 2024",
+    type: "kanvassing",
+    date: "Senin 30 Oktober 2024",
   },
   {
-    id: "5",
+    id: "6",
     customer: "Toko Perangkat Jaringan",
-    description: "Pengiriman | Senin 30 Oktober 2024",
+    type: "pengiriman",
+    date: "Senin 30 Oktober 2024",
   },
 ];
 
 export default function Index() {
   const [activeTab, setActiveTab] = useState("running");
+  const router = useRouter();
+
+  function handlePress(type: string) {
+    const typeMapping: Record<string, string> = {
+      pengiriman: "/delivery",
+      kanvassing: "/canvassing",
+      laporan: "/report",
+    };
+
+    router.push(typeMapping[type] as RelativePathString);
+  }
 
   // Render item untuk FlatList
   const renderItem = ({
     item,
   }: {
-    item: { id: string; customer: string; description: string };
+    item: { id: string; customer: string; type: string; date: string };
   }) => (
-    <TouchableOpacity style={styles.taskItem}>
+    <TouchableOpacity
+      style={styles.taskItem}
+      onPress={() => handlePress(item.type)}
+    >
       <Text style={styles.taskTitle}>{item.customer}</Text>
-      <Text style={styles.taskDescription}>{item.description}</Text>
+      <Text style={styles.taskDescription}>
+        {(item.type == "pengiriman"
+          ? "Pengiriman"
+          : item.type == "kanvassing"
+          ? "Kanvassing"
+          : "Laporan Selesai") +
+          " | " +
+          item.date}
+      </Text>
     </TouchableOpacity>
   );
 
