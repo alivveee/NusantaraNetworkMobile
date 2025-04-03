@@ -10,7 +10,7 @@ export default function RootLayout() {
       }}
     >
       <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-      <Stack.Screen name="delivery" options={{ headerShown: false }} />
+      <Stack.Screen name="task-report" options={{ headerShown: false }} />
     </Stack>
   );
 }

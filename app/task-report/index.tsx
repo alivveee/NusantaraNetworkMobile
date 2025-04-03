@@ -57,7 +57,7 @@ export default function Index() {
         <TouchableOpacity
           style={styles.continueButton}
           onPress={() => {
-            router.push("/delivery/submit-report");
+            router.push("/task-report/submit");
           }}
         >
           <Text style={styles.continueButtonText}>Lanjut</Text>

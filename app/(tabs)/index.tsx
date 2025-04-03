@@ -56,12 +56,15 @@ export default function Index() {
 
   function handlePress(type: string) {
     const typeMapping: Record<string, string> = {
-      pengiriman: "/delivery",
-      kanvassing: "/canvassing",
+      pengiriman: "/task-report",
+      kanvassing: "/task-report",
       laporan: "/report",
     };
 
-    router.push(typeMapping[type] as RelativePathString);
+    router.push({
+      pathname: typeMapping[type] as RelativePathString,
+      params: { type: type },
+    });
   }
 
   // Render item untuk FlatList
